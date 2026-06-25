@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Site</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      color: #222;
+      background: #f9f9f9;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+    }
+
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: #16213e;
+      color: #fff;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #aaa;
+      max-width: 540px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero a {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: #e94560;
+      color: #fff;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hero a:hover {
+      background: #c73652;
+    }
+
+    .section {
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section h3 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: #1a1a2e;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+
+    .card h4 {
+      margin-bottom: 0.5rem;
+      color: #1a1a2e;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #1a1a2e;
+      color: #666;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>MeuSite</h1>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Bem-vindo ao meu site</h2>
+    <p>Este é um esqueleto simples, pronto para ser personalizado conforme suas necessidades.</p>
+    <a href="#">Saiba mais</a>
+  </section>
+
+  <section class="section">
+    <h3>O que você vai encontrar aqui</h3>
+    <p>Adicione aqui uma descrição geral do seu projeto, portfólio ou serviço.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h4>Seção 1</h4>
+        <p>Descreva sua primeira funcionalidade, projeto ou serviço aqui.</p>
+      </div>
+      <div class="card">
+        <h4>Seção 2</h4>
+        <p>Descreva sua segunda funcionalidade, projeto ou serviço aqui.</p>
+      </div>
+      <div class="card">
+        <h4>Seção 3</h4>
+        <p>Descreva sua terceira funcionalidade, projeto ou serviço aqui.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 MeuSite. Todos os direitos reservados.</p>
+  </footer>
+
+</body>
+</html>
