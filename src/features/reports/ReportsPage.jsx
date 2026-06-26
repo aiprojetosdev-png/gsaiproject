@@ -1,40 +1,27 @@
 import { useState, useEffect } from 'react'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
-import { Download, Zap, TrendingUp, CheckCircle } from 'lucide-react'
+import { Download, Zap, TrendingUp, CheckCircle, ArrowUpRight } from 'lucide-react'
 import { clients } from '../../data/clients'
 
 function Skeleton({ className = '' }) {
-  return <div className={`bg-white/10 rounded-xl animate-pulse ${className}`} />
+  return <div className={`bg-slate-100 rounded-xl animate-pulse ${className}`} />
 }
 
 const weeklyData = {
-  uptime: [
-    { day: 'Seg', v: 99.9 }, { day: 'Ter', v: 100 }, { day: 'Qua', v: 99.7 },
-    { day: 'Qui', v: 100 },  { day: 'Sex', v: 99.8 }, { day: 'Sáb', v: 100 }, { day: 'Dom', v: 100 },
-  ],
-  tickets: [
-    { day: 'Seg', v: 3 }, { day: 'Ter', v: 5 }, { day: 'Qua', v: 2 },
-    { day: 'Qui', v: 1 }, { day: 'Sex', v: 4 }, { day: 'Sáb', v: 0 }, { day: 'Dom', v: 0 },
-  ],
+  uptime:  [{ day: 'Seg', v: 99.9 },{ day: 'Ter', v: 100 },{ day: 'Qua', v: 99.7 },{ day: 'Qui', v: 100 },{ day: 'Sex', v: 99.8 },{ day: 'Sáb', v: 100 },{ day: 'Dom', v: 100 }],
+  tickets: [{ day: 'Seg', v: 3 },{ day: 'Ter', v: 5 },{ day: 'Qua', v: 2 },{ day: 'Qui', v: 1 },{ day: 'Sex', v: 4 },{ day: 'Sáb', v: 0 },{ day: 'Dom', v: 0 }],
 }
-
 const monthlyData = {
-  roi: [
-    { month: 'Jan', roi: 210 }, { month: 'Fev', roi: 230 }, { month: 'Mar', roi: 245 },
-    { month: 'Abr', roi: 260 }, { month: 'Mai', roi: 275 }, { month: 'Jun', roi: 290 },
-  ],
-  nps: [
-    { month: 'Jan', nps: 82 }, { month: 'Fev', nps: 84 }, { month: 'Mar', nps: 85 },
-    { month: 'Abr', nps: 86 }, { month: 'Mai', nps: 87 }, { month: 'Jun', nps: 88 },
-  ],
+  roi: [{ m: 'Jan', v: 210 },{ m: 'Fev', v: 230 },{ m: 'Mar', v: 245 },{ m: 'Abr', v: 260 },{ m: 'Mai', v: 275 },{ m: 'Jun', v: 290 }],
+  nps: [{ m: 'Jan', v: 82 },{ m: 'Fev', v: 84 },{ m: 'Mar', v: 85 },{ m: 'Abr', v: 86 },{ m: 'Mai', v: 87 },{ m: 'Jun', v: 88 }],
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+const ChartTip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-gs-dark border border-white/15 rounded-xl px-4 py-3 text-sm">
-      <p className="text-white/60 mb-1">{label}</p>
-      <p className="text-gs-cyan font-bold">{payload[0].value}</p>
+    <div className="bg-white border border-slate-100 rounded-xl px-3 py-2 shadow-card-md text-sm">
+      <p className="text-slate-400 text-xs mb-0.5">{label}</p>
+      <p className="font-bold text-slate-900">{payload[0].value}</p>
     </div>
   )
 }
@@ -43,192 +30,179 @@ export default function ReportsPage() {
   const [client, setClient]   = useState(clients[0].id)
   const [type, setType]       = useState('Semanal')
   const [loading, setLoading] = useState(false)
+  const selectedClient        = clients.find(c => c.id === client) || clients[0]
 
-  const selectedClient = clients.find(c => c.id === client) || clients[0]
-
-  const applyFilter = () => {
+  useEffect(() => {
     setLoading(true)
-    setTimeout(() => setLoading(false), 1200)
-  }
-
-  useEffect(() => { applyFilter() }, [client, type])
+    setTimeout(() => setLoading(false), 900)
+  }, [client, type])
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black text-white">Relatórios<span className="text-gs-cyan">_</span></h1>
-          <p className="text-white/50 text-sm mt-1">Relatórios gerados automaticamente pelos agentes IA</p>
+          <h1 className="text-2xl font-black text-slate-900">Relatórios<span className="text-gs-cyan">_</span></h1>
+          <p className="text-sm text-slate-500 mt-0.5">Gerados automaticamente pelos agentes IA</p>
         </div>
-        <button className="flex items-center gap-2 border border-white/30 text-white text-sm px-4 py-2.5 rounded-xl hover:bg-white/10 transition-all">
-          <Download size={15} />
-          Exportar PDF
+        <button className="btn-ghost flex items-center gap-2">
+          <Download size={14} /> Exportar PDF
         </button>
       </div>
 
       {/* Filters */}
-      <div className="gs-card p-5 flex items-center gap-5 flex-wrap">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-white/40 uppercase tracking-wider">Cliente</label>
+      <div className="card p-5 flex items-center gap-5 flex-wrap">
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1.5">Cliente</label>
           <select
             value={client}
             onChange={e => setClient(e.target.value)}
-            className="bg-gs-blue border border-white/20 text-white text-sm px-3 py-2 rounded-xl focus:outline-none focus:border-gs-cyan"
+            className="bg-slate-50 border border-slate-200 text-slate-700 text-sm px-3 py-2 rounded-xl focus:outline-none focus:border-gs-blue"
           >
             {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-white/40 uppercase tracking-wider">Tipo</label>
-          <div className="flex gap-1 bg-gs-dark rounded-xl p-1">
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1.5">Período</label>
+          <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
             {['Semanal', 'Mensal'].map(t => (
-              <button
-                key={t}
-                onClick={() => setType(t)}
-                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                  type === t ? 'bg-gs-cyan text-gs-dark font-bold' : 'text-white/60 hover:text-white'
-                }`}
+              <button key={t} onClick={() => setType(t)}
+                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${type === t ? 'bg-white text-slate-900 shadow-card' : 'text-slate-500 hover:text-slate-700'}`}
               >
                 {t}
               </button>
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-2 ml-auto text-xs text-gs-cyan bg-gs-cyan/10 border border-gs-cyan/30 px-3 py-2 rounded-xl">
-          <Zap size={12} />
-          Gerado por Globalsys AI™
+        <div className="ml-auto badge-cyan gap-1.5 py-2 px-3">
+          <Zap size={12} />Gerado por Globalsys AI™
         </div>
       </div>
 
       {loading ? (
-        /* Skeleton */
-        <div className="space-y-6 animate-pulse">
-          <div className="grid grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <Skeleton key={i} className="h-24" />)}
-          </div>
-          <div className="grid grid-cols-2 gap-6">
-            <Skeleton className="h-48" />
-            <Skeleton className="h-48" />
-          </div>
-          <Skeleton className="h-32" />
+        <div className="space-y-5">
+          <div className="grid grid-cols-4 gap-4">{[1,2,3,4].map(i => <Skeleton key={i} className="h-24" />)}</div>
+          <div className="grid grid-cols-2 gap-5"><Skeleton className="h-56" /><Skeleton className="h-56" /></div>
+          <Skeleton className="h-36" />
         </div>
       ) : type === 'Semanal' ? (
-        <div className="space-y-6 animate-fade-in">
-          {/* Summary */}
-          <div className="gs-card p-6">
+        <div className="space-y-5 animate-fade-in">
+          <div className="card p-6">
             <div className="flex items-center gap-2 mb-3">
-              <h3 className="font-bold text-white">Resumo Executivo</h3>
-              <span className="text-[10px] text-gs-cyan bg-gs-cyan/10 border border-gs-cyan/20 px-2 py-0.5 rounded-full">Semanal</span>
+              <h3 className="font-semibold text-slate-900">Resumo Executivo</h3>
+              <span className="badge-cyan">Semanal</span>
             </div>
-            <p className="text-sm text-white/70 leading-relaxed">
-              Na semana de 23/06 a 29/06/2026, <strong className="text-white">{selectedClient.name}</strong> manteve
-              operação estável com uptime médio de <strong className="text-gs-cyan">99.9%</strong> e
-              SLA dentro do contratado (<strong className="text-gs-cyan">{selectedClient.sla}</strong>).
-              Foram abertos <strong className="text-white">15 chamados</strong>, todos resolvidos em até 4h.
-              O Agente IA identificou <strong className="text-gs-cyan">2 oportunidades</strong> de otimização no ambiente.
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Na semana de 23/06 a 29/06/2026, <strong className="text-slate-900">{selectedClient.name}</strong> manteve
+              operação estável com uptime médio de <strong className="text-gs-blue">{selectedClient.uptime}%</strong> e
+              SLA dentro do contratado <strong className="text-gs-blue">({selectedClient.sla})</strong>.
+              Foram abertos <strong className="text-slate-900">15 chamados</strong>, todos resolvidos em até 4h.
+              O Agente IA identificou <strong className="text-gs-blue">2 oportunidades</strong> de otimização.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="gs-card p-6">
-              <h3 className="text-sm font-semibold text-white/70 mb-4">Uptime Diário (%)</h3>
-              <ResponsiveContainer width="100%" height={180}>
-                <BarChart data={weeklyData.uptime} barSize={24}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="day" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[99, 100.1]} tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="v" fill="#00E5FF" radius={[4,4,0,0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="gs-card p-6">
-              <h3 className="text-sm font-semibold text-white/70 mb-4">Tickets por Dia</h3>
-              <ResponsiveContainer width="100%" height={180}>
-                <BarChart data={weeklyData.tickets} barSize={24}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="day" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="v" fill="#a78bfa" radius={[4,4,0,0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="gs-card p-5 border-l-4 border-gs-cyan">
-            <h3 className="font-semibold text-white mb-3 flex items-center gap-2"><CheckCircle size={16} className="text-gs-cyan" />SLA da Semana</h3>
-            <div className="grid grid-cols-3 gap-4 text-sm">
-              {[
-                ['Tempo médio de resposta', '1h 23min', 'text-gs-cyan'],
-                ['Chamados resolvidos', '15/15', 'text-green-400'],
-                ['Dentro do SLA', '100%', 'text-green-400'],
-              ].map(([k, v, c]) => (
-                <div key={k}>
-                  <p className="text-white/40 text-xs">{k}</p>
-                  <p className={`font-bold text-lg mt-0.5 ${c}`}>{v}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-6 animate-fade-in">
           <div className="grid grid-cols-3 gap-4">
             {[
-              ['ROI Estimado', '290%', <TrendingUp size={18} className="text-gs-cyan" />],
-              ['NPS do Mês', '88', <span className="text-gs-cyan font-black">★</span>],
-              ['Uptime Mensal', `${selectedClient.uptime}%`, <CheckCircle size={18} className="text-green-400" />],
-            ].map(([k, v, icon]) => (
-              <div key={k} className="gs-card p-5">
-                <div className="flex items-center gap-2 mb-2">{icon}<p className="text-xs text-white/40 uppercase tracking-wider">{k}</p></div>
-                <p className="text-3xl font-black text-gs-cyan">{v}</p>
+              ['Tempo médio de resposta', '1h 23min', 'text-gs-blue', TrendingUp],
+              ['Chamados resolvidos', '15/15', 'text-emerald-600', CheckCircle],
+              ['Dentro do SLA', '100%', 'text-emerald-600', CheckCircle],
+            ].map(([k, v, c, Icon]) => (
+              <div key={k} className="card p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <Icon size={13} className="text-gs-blue" />
+                  </div>
+                  <p className="text-xs text-slate-400">{k}</p>
+                </div>
+                <p className={`text-2xl font-black ${c}`}>{v}</p>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="gs-card p-6">
-              <h3 className="text-sm font-semibold text-white/70 mb-4">ROI Acumulado (%)</h3>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold text-slate-700 mb-4">Uptime Diário (%)</h3>
+              <ResponsiveContainer width="100%" height={180}>
+                <BarChart data={weeklyData.uptime} barSize={28}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="day" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[99, 100.1]} tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<ChartTip />} />
+                  <Bar dataKey="v" fill="#1A1AE6" radius={[4,4,0,0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold text-slate-700 mb-4">Tickets por Dia</h3>
+              <ResponsiveContainer width="100%" height={180}>
+                <BarChart data={weeklyData.tickets} barSize={28}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="day" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<ChartTip />} />
+                  <Bar dataKey="v" fill="#6366f1" radius={[4,4,0,0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-5 animate-fade-in">
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              ['ROI Estimado', '290%', 'text-gs-blue', '+40% vs mês ant.'],
+              ['NPS do Mês', '88', 'text-emerald-600', '+1 vs mês ant.'],
+              ['Uptime Mensal', `${selectedClient.uptime}%`, 'text-gs-blue', 'SLA: ' + selectedClient.sla],
+            ].map(([k, v, c, sub]) => (
+              <div key={k} className="card p-5">
+                <p className="text-xs text-slate-400 uppercase tracking-wider mb-2">{k}</p>
+                <p className={`text-3xl font-black ${c} mb-1`}>{v}</p>
+                <p className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                  <ArrowUpRight size={11} />{sub}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-5">
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold text-slate-700 mb-4">ROI Acumulado (%)</h3>
               <ResponsiveContainer width="100%" height={180}>
                 <LineChart data={monthlyData.roi}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line dataKey="roi" stroke="#00E5FF" strokeWidth={2.5} dot={{ fill: '#00E5FF', r: 4 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="m" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<ChartTip />} />
+                  <Line dataKey="v" stroke="#1A1AE6" strokeWidth={2.5} dot={{ fill: '#1A1AE6', r: 4, strokeWidth: 0 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            <div className="gs-card p-6">
-              <h3 className="text-sm font-semibold text-white/70 mb-4">Evolução NPS</h3>
+            <div className="card p-5">
+              <h3 className="text-sm font-semibold text-slate-700 mb-4">Evolução NPS</h3>
               <ResponsiveContainer width="100%" height={180}>
                 <LineChart data={monthlyData.nps}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[78, 92]} tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line dataKey="nps" stroke="#34d399" strokeWidth={2.5} dot={{ fill: '#34d399', r: 4 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="m" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[78, 92]} tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<ChartTip />} />
+                  <Line dataKey="v" stroke="#10b981" strokeWidth={2.5} dot={{ fill: '#10b981', r: 4, strokeWidth: 0 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="gs-card p-6">
-            <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-              <Zap size={16} className="text-gs-cyan" />
-              Recomendações da IA para próximo mês
+          <div className="card p-6">
+            <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Zap size={15} className="text-gs-blue" />Recomendações da IA para o próximo mês
             </h3>
             <div className="space-y-3">
               {[
                 'Aumentar frequência de checkpoints com o squad técnico — 2x por semana.',
-                'Propor expansão do módulo de Analytics Avançado — potencial de upsell de R$ 8.000/mês.',
+                'Propor expansão do módulo Analytics Avançado — potencial de upsell de R$ 8.000/mês.',
                 'Agendar QBR (Quarterly Business Review) para apresentar resultados do semestre.',
                 'Revisar SLA de tickets críticos — tempo médio 12% acima do target em dias de pico.',
-              ].map((rec, i) => (
-                <div key={i} className="flex items-start gap-3 text-sm text-white/70">
-                  <span className="text-gs-cyan font-bold shrink-0">{i + 1}.</span>
-                  {rec}
+              ].map((r, i) => (
+                <div key={i} className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-100 rounded-xl text-sm text-slate-700">
+                  <span className="text-gs-blue font-bold shrink-0 mt-0.5">{i + 1}.</span>{r}
                 </div>
               ))}
             </div>

@@ -1,145 +1,162 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
-import { TrendingUp, Users, DollarSign, Star, Clock, AlertCircle } from 'lucide-react'
+import { TrendingUp, Users, DollarSign, Star, AlertCircle, ArrowUpRight } from 'lucide-react'
 import { dashboardData, aiAgents } from '../../data/agents'
 import BrazilMap from './BrazilMap'
 
-function useCounter(target, duration = 1800) {
+function useCounter(target, duration = 1600) {
   const [val, setVal] = useState(0)
   useEffect(() => {
     let start = null
     const step = (ts) => {
       if (!start) start = ts
-      const progress = Math.min((ts - start) / duration, 1)
-      setVal(Math.floor(progress * target))
-      if (progress < 1) requestAnimationFrame(step)
+      const p = Math.min((ts - start) / duration, 1)
+      const ease = 1 - Math.pow(1 - p, 3)
+      setVal(Math.floor(ease * target))
+      if (p < 1) requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
   }, [target, duration])
   return val
 }
 
-function KPICard({ icon: Icon, label, value, suffix = '', prefix = '', color = 'cyan', animated }) {
-  const displayVal = animated
-    ? (prefix + animated.toLocaleString('pt-BR') + suffix)
-    : value
+function KPICard({ icon: Icon, label, value, delta, color = 'blue' }) {
+  const colors = {
+    blue: { bg: 'bg-blue-50', icon: 'text-gs-blue', val: 'text-gs-blue' },
+    cyan: { bg: 'bg-cyan-50', icon: 'text-cyan-600', val: 'text-cyan-600' },
+    purple: { bg: 'bg-purple-50', icon: 'text-purple-600', val: 'text-purple-600' },
+    green: { bg: 'bg-emerald-50', icon: 'text-emerald-600', val: 'text-emerald-600' },
+  }
+  const c = colors[color]
   return (
-    <div className="gs-card gs-card-hover p-6 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">{label}</span>
-        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-          <Icon size={16} className="text-gs-cyan" />
+    <div className="card card-hover p-5">
+      <div className="flex items-start justify-between mb-4">
+        <div className={`w-9 h-9 rounded-xl ${c.bg} flex items-center justify-center`}>
+          <Icon size={17} className={c.icon} />
         </div>
+        {delta && (
+          <span className="flex items-center gap-0.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <ArrowUpRight size={11} />{delta}
+          </span>
+        )}
       </div>
-      <div className="text-3xl font-black text-gs-cyan">{displayVal}</div>
+      <p className={`text-2xl font-black ${c.val} mb-1`}>{value}</p>
+      <p className="text-xs text-slate-500 font-medium">{label}</p>
     </div>
   )
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-gs-dark border border-white/15 rounded-xl px-4 py-3 shadow-cyan text-sm">
-      <p className="text-white/60 mb-1">{label}</p>
-      <p className="text-gs-cyan font-bold">{payload[0].value?.toLocaleString('pt-BR')}</p>
+    <div className="bg-white border border-slate-100 rounded-xl px-3 py-2 shadow-card-md text-sm">
+      <p className="text-slate-400 text-xs mb-0.5">{label}</p>
+      <p className="font-bold text-slate-900">{payload[0].value?.toLocaleString('pt-BR')}</p>
     </div>
   )
 }
 
 export default function Dashboard() {
-  const leads   = useCounter(dashboardData.kpis.leadsMonth)
-  const conv    = useCounter(234)  // 23.4 * 10
-  const mrr     = useCounter(dashboardData.kpis.mrr)
-  const nps     = useCounter(dashboardData.kpis.npsAvg)
+  const leads = useCounter(dashboardData.kpis.leadsMonth)
+  const mrr   = useCounter(dashboardData.kpis.mrr)
+  const nps   = useCounter(dashboardData.kpis.npsAvg)
+  const conv  = useCounter(234)
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-white mb-1">
-          Dashboard<span className="text-gs-cyan">_</span>
-        </h1>
-        <p className="text-white/50 text-sm">Visão geral em tempo real — atualizado agora</p>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900">Dashboard<span className="text-gs-cyan">_</span></h1>
+          <p className="text-sm text-slate-500 mt-0.5">Visão geral atualizada em tempo real</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-medium text-green-600 bg-green-50 border border-green-100 px-3 py-1.5 rounded-full">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+          Todos os agentes ativos
+        </div>
       </div>
 
       {/* KPI Row */}
       <div className="grid grid-cols-4 gap-4">
-        <KPICard icon={Users}      label="Leads este mês"    animated={leads}    suffix=""    />
-        <KPICard icon={TrendingUp} label="Taxa de conversão" animated={Math.floor(conv/10*10)/10} suffix="%" />
-        <KPICard icon={DollarSign} label="MRR"              animated={mrr}      prefix="R$ " />
-        <KPICard icon={Star}       label="NPS médio"        animated={nps}      />
+        <KPICard icon={Users}      label="Leads este mês"    value={leads}              delta="+18%"  color="blue"   />
+        <KPICard icon={TrendingUp} label="Taxa de conversão" value={`${Math.floor(conv/10*10)/10}%`} delta="+2.1%" color="purple" />
+        <KPICard icon={DollarSign} label="MRR"               value={`R$ ${mrr.toLocaleString('pt-BR')}`} delta="+5.4%" color="green"  />
+        <KPICard icon={Star}       label="NPS médio"         value={nps}                delta="+3"    color="cyan"   />
       </div>
 
-      {/* Charts row */}
-      <div className="grid grid-cols-2 gap-6">
-        <div className="gs-card p-6">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Leads por Semana</h2>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={dashboardData.weeklyLeads} barSize={28}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="week" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="leads" fill="#00E5FF" radius={[4,4,0,0]} />
+      {/* Charts */}
+      <div className="grid grid-cols-2 gap-5">
+        <div className="card p-5">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Leads por Semana</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Últimas 4 semanas</p>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={dashboardData.weeklyLeads} barSize={32}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="week" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<ChartTooltip />} />
+              <Bar dataKey="leads" fill="#1A1AE6" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="gs-card p-6">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Receita Mensal (R$)</h2>
-          <ResponsiveContainer width="100%" height={200}>
+        <div className="card p-5">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Receita Mensal</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Evolução do MRR</p>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={180}>
             <LineChart data={dashboardData.monthlyRevenue}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${(v/1000).toFixed(0)}k`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Line dataKey="revenue" stroke="#00E5FF" strokeWidth={2.5} dot={{ fill: '#00E5FF', r: 4 }} activeDot={{ r: 6, fill: '#00E5FF' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="month" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${(v/1000).toFixed(0)}k`} />
+              <Tooltip content={<ChartTooltip />} />
+              <Line dataKey="revenue" stroke="#1A1AE6" strokeWidth={2.5} dot={{ fill: '#1A1AE6', r: 4, strokeWidth: 0 }} activeDot={{ r: 6, fill: '#1A1AE6', strokeWidth: 2, stroke: '#EEF0FF' }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Bottom row */}
-      <div className="grid grid-cols-3 gap-6">
-        {/* AI Agents */}
-        <div className="gs-card p-6">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Agentes IA Ativos</h2>
+      <div className="grid grid-cols-3 gap-5">
+        {/* Agents */}
+        <div className="card p-5">
+          <h2 className="text-sm font-semibold text-slate-900 mb-4">Agentes IA Ativos</h2>
           <div className="space-y-4">
             {aiAgents.map(agent => (
               <div key={agent.id} className="flex items-start gap-3">
-                <span className="relative flex h-2 w-2 mt-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-                </span>
+                <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">{agent.name}</p>
-                  <p className="text-xs text-white/50 truncate">{agent.lastAction}</p>
-                  <p className="text-[10px] text-white/30 mt-0.5">há {agent.lastActionTime} min</p>
+                  <p className="text-sm font-semibold text-slate-800 truncate">{agent.name}</p>
+                  <p className="text-xs text-slate-400 truncate mt-0.5">{agent.lastAction}</p>
+                  <p className="text-[10px] text-slate-300 mt-0.5">há {agent.lastActionTime} min · {agent.actionsToday} ações hoje</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Pending Approvals */}
-        <div className="gs-card p-6 flex flex-col items-center justify-center text-center">
-          <AlertCircle size={32} className="text-gs-cyan mb-3" />
-          <div className="text-6xl font-black text-gs-cyan mb-2 relative">
-            {dashboardData.pendingApprovals}
-            <span className="absolute -top-1 -right-6 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gs-cyan opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-gs-cyan" />
-            </span>
+        {/* Pending */}
+        <div className="card p-5 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
+            <AlertCircle size={24} className="text-gs-blue" />
           </div>
-          <p className="text-sm font-semibold text-white/80">Aprovações Pendentes</p>
-          <p className="text-xs text-white/40 mt-1">Leads aguardando decisão</p>
-          <div className="mt-4 px-3 py-1 bg-gs-cyan/20 border border-gs-cyan/40 rounded-full text-xs text-gs-cyan font-semibold animate-pulse">
-            URGENTE
-          </div>
+          <p className="text-5xl font-black text-gs-blue mb-1">{dashboardData.pendingApprovals}</p>
+          <p className="text-sm font-semibold text-slate-700">Aprovações Pendentes</p>
+          <p className="text-xs text-slate-400 mt-1 mb-4">Leads aguardando decisão</p>
+          <span className="badge-cyan animate-pulse">REQUER ATENÇÃO</span>
         </div>
 
         {/* Brazil Map */}
-        <div className="gs-card p-6">
-          <h2 className="text-sm font-semibold text-white/70 mb-3">Clientes por Estado</h2>
+        <div className="card p-5">
+          <h2 className="text-sm font-semibold text-slate-900 mb-3">Cobertura por Estado</h2>
           <BrazilMap />
         </div>
       </div>

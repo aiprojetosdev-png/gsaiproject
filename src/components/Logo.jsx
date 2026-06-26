@@ -1,17 +1,22 @@
-export default function Logo({ size = 'md' }) {
-  const sizes = { sm: { icon: 28, text: 'text-base' }, md: { icon: 36, text: 'text-xl' }, lg: { icon: 48, text: 'text-2xl' } }
+export default function Logo({ size = 'md', dark = false }) {
+  const sizes = {
+    sm: { icon: 24, text: 'text-sm' },
+    md: { icon: 30, text: 'text-lg' },
+    lg: { icon: 38, text: 'text-xl' },
+  }
   const s = sizes[size] || sizes.md
+  const textColor = dark ? 'text-slate-900' : 'text-white'
+  const accentColor = dark ? '#1A1AE6' : '#00E5FF'
+
   return (
     <div className="flex items-center gap-2.5">
-      <svg width={s.icon} height={s.icon} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="24" cy="24" r="24" fill="#00E5FF" fillOpacity="0.15" />
-        <circle cx="24" cy="24" r="22" stroke="#00E5FF" strokeWidth="1.5" />
-        <polygon points="24,10 38,32 10,32" fill="none" stroke="#00E5FF" strokeWidth="2" strokeLinejoin="round" />
-        <polygon points="24,18 32,32 16,32" fill="#00E5FF" fillOpacity="0.7" />
-        <circle cx="24" cy="24" r="3" fill="#ffffff" />
+      <svg width={s.icon} height={s.icon} viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="19" stroke={accentColor} strokeWidth="1.5" fill={dark ? '#EEF0FF' : 'rgba(255,255,255,0.1)'} />
+        <polygon points="20,9 31,28 9,28" fill="none" stroke={accentColor} strokeWidth="1.8" strokeLinejoin="round" />
+        <polygon points="20,16 26.5,28 13.5,28" fill={accentColor} fillOpacity="0.8" />
       </svg>
-      <span className={`font-black tracking-tight text-white ${s.text}`}>
-        global<span className="text-gs-cyan">sys</span>
+      <span className={`font-extrabold tracking-tight ${s.text} ${textColor}`}>
+        global<span style={{ color: accentColor }}>sys</span>
       </span>
     </div>
   )
