@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Search, Kanban, Users, BarChart3, Settings, LogOut, Activity, DollarSign, UserCheck } from 'lucide-react'
+import { LayoutDashboard, Search, Kanban, Users, BarChart3, Settings, LogOut, Activity, DollarSign, UserCheck, BookOpen } from 'lucide-react'
 import Logo from './Logo'
 import { aiAgents } from '../data/agents'
 
@@ -10,6 +10,7 @@ const nav = [
   { to: '/clientes',    icon: Users,            label: 'Clientes' },
   { to: '/financeiro',  icon: DollarSign,       label: 'Financeiro' },
   { to: '/equipe',      icon: UserCheck,        label: 'Equipe' },
+  { to: '/resumos',     icon: BookOpen,         label: 'Resumos IA' },
   { to: '/relatorios',  icon: BarChart3,        label: 'Relatórios' },
 ]
 

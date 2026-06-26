@@ -9,6 +9,7 @@ import ClientsPage from './features/clients/ClientsPage'
 import ReportsPage from './features/reports/ReportsPage'
 import FinanceiroPage from './features/financeiro/FinanceiroPage'
 import EquipePage from './features/equipe/EquipePage'
+import ResumosPage from './features/resumos/ResumosPage'
 
 function AppContent() {
   const [user, setUser] = useState(null)
@@ -36,6 +37,7 @@ function AppContent() {
         <Route path="/clientes"   element={<ClientsPage />} />
         <Route path="/financeiro" element={<FinanceiroPage />} />
         <Route path="/equipe"     element={<EquipePage />} />
+        <Route path="/resumos"    element={<ResumosPage />} />
         <Route path="/relatorios" element={<ReportsPage />} />
         <Route path="*"           element={<Navigate to="/dashboard" replace />} />
       </Routes>
