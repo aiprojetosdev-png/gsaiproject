@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #1A1AE6;
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #080863; }
+  ::-webkit-scrollbar-thumb { background: #1A1AE6; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
+}
+
+@layer utilities {
+  .gs-card {
+    @apply bg-gs-mid border border-white/15 rounded-2xl shadow-card;
+  }
+  .gs-card-hover {
+    @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-cyan;
+  }
+  .underscore-cyan::after {
+    content: '_';
+    color: #00E5FF;
+  }
+  .text-gradient-cyan {
+    background: linear-gradient(90deg, #ffffff, #00E5FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Geometric background shapes */
+.geo-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.geo-shape {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Drag active */
+.kanban-drag-active {
+  opacity: 0.5;
+  transform: rotate(3deg);
+}
+
+/* Boot screen */
+.boot-line { opacity: 0; }
+.boot-line.visible { animation: bootLine 0.3s ease-out forwards; }
+
+/* NPS bar gradient */
+.nps-bar {
+  background: linear-gradient(90deg, #1A1AE6, #00E5FF);
+}
