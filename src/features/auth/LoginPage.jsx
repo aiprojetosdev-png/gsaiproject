@@ -22,86 +22,77 @@ export default function LoginPage({ onLogin }) {
       className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #1A1AE6 0%, #080863 100%)' }}
     >
-      {/* Soft animated blobs — clean, não futurístico */}
-      <div
-        className="absolute -top-48 -left-48 w-[600px] h-[600px] rounded-full opacity-25 blur-blob animate-blob"
-        style={{ background: 'radial-gradient(circle, #ffffff 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full opacity-20 blur-blob animate-blob2"
-        style={{ background: 'radial-gradient(circle, #00E5FF 0%, transparent 70%)', animationDelay: '3s' }}
-      />
-      <div
-        className="absolute top-1/3 right-1/4 w-[350px] h-[350px] rounded-full opacity-15 blur-blob animate-blob3"
-        style={{ background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)', animationDelay: '6s' }}
-      />
+      {/* Blobs sutis */}
+      <div className="absolute -top-60 -left-60 w-[700px] h-[700px] rounded-full opacity-20 animate-blob"
+        style={{ background: 'radial-gradient(circle, #ffffff 0%, transparent 65%)', filter: 'blur(80px)' }} />
+      <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full opacity-15 animate-blob2"
+        style={{ background: 'radial-gradient(circle, #00E5FF 0%, transparent 65%)', filter: 'blur(80px)', animationDelay: '3s' }} />
 
       {/* Card */}
-      <div className="relative z-10 w-full max-w-[420px] mx-6">
-        <div className="bg-white rounded-3xl shadow-card-lg p-10">
+      <div className="relative z-10 w-full max-w-[400px] mx-6">
+        <div className="bg-white rounded-2xl shadow-card-lg overflow-hidden">
 
-          {/* Logo */}
-          <div className="flex flex-col items-center mb-8">
-            <Logo size="md" dark />
-            <p className="text-xs text-slate-400 mt-3 tracking-wide">Plataforma de Gestão Inteligente</p>
+          {/* Header azul com logo */}
+          <div className="bg-gs-dark px-8 pt-8 pb-7 flex flex-col items-center">
+            <Logo size="md" />
+            <p className="text-white/40 text-xs mt-3">Plataforma de Gestão Inteligente</p>
           </div>
 
-          <h1 className="text-xl font-bold text-slate-900 mb-1">Bem-vindo de volta</h1>
-          <p className="text-sm text-slate-500 mb-7">Acesse sua conta para continuar</p>
+          {/* Form */}
+          <div className="px-8 py-7">
+            <h1 className="text-lg font-bold text-slate-900 mb-0.5">Bem-vindo de volta</h1>
+            <p className="text-sm text-slate-400 mb-6">Acesse sua conta para continuar</p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1.5">E-mail</label>
-              <div className="relative">
-                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="input-field pl-10"
-                />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide">E-mail</label>
+                <div className="relative">
+                  <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300" />
+                  <input
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 placeholder-slate-300 focus:outline-none focus:border-gs-blue focus:ring-2 focus:ring-gs-blue/10 transition-all"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1.5">Senha</label>
-              <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="input-field pl-10"
-                />
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Senha</label>
+                  <button type="button" className="text-xs text-gs-blue hover:underline">Esqueci a senha</button>
+                </div>
+                <div className="relative">
+                  <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300" />
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 placeholder-slate-300 focus:outline-none focus:border-gs-blue focus:ring-2 focus:ring-gs-blue/10 transition-all"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between text-xs pt-1">
-              <label className="flex items-center gap-2 text-slate-500 cursor-pointer select-none">
-                <input type="checkbox" className="accent-gs-blue rounded" />
-                Lembrar acesso
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" className="accent-gs-blue" />
+                <span className="text-sm text-slate-500">Lembrar acesso</span>
               </label>
-              <button type="button" className="text-gs-blue hover:underline font-medium">
-                Esqueci a senha
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gs-blue text-white font-semibold py-3 rounded-xl text-sm hover:bg-gs-mid active:scale-95 transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                {loading
+                  ? <><Loader2 size={15} className="animate-spin" />Entrando...</>
+                  : 'Entrar na plataforma'
+                }
               </button>
-            </div>
+            </form>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gs-blue text-white font-semibold py-3 rounded-xl text-sm hover:bg-gs-mid active:scale-95 transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2 mt-2 shadow-blue"
-            >
-              {loading
-                ? <><Loader2 size={16} className="animate-spin" /> Entrando...</>
-                : 'Entrar na plataforma'
-              }
-            </button>
-          </form>
-
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-xs text-slate-400">
+            <p className="text-center text-xs text-slate-300 mt-6">
               Globalsys AI™ · 16 anos de tecnologia B2B
             </p>
           </div>

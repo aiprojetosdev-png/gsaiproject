@@ -1,51 +1,88 @@
 import { useEffect, useState } from 'react'
-import Logo from '../../components/Logo'
-
-const lines = [
-  { delay: 0,    text: '→ Inicializando Globalsys AI™...' },
-  { delay: 400,  text: '→ Carregando módulos de prospecção...' },
-  { delay: 750,  text: '→ Conectando agentes de IA...' },
-  { delay: 1050, text: '→ Sincronizando base de clientes...' },
-  { delay: 1350, text: '→ Autenticando sessão...' },
-  { delay: 1650, text: '✓ Sistema pronto. Bem-vindo!' },
-]
 
 export default function BootScreen({ onDone }) {
-  const [visible, setVisible]   = useState([])
   const [progress, setProgress] = useState(0)
+  const [phase, setPhase] = useState(0) // 0=spin, 1=fill, 2=done
 
   useEffect(() => {
-    lines.forEach(({ delay, text }) => {
-      setTimeout(() => setVisible(p => [...p, text]), delay)
-    })
+    // Progresso suave
     const prog = setInterval(() => {
-      setProgress(p => { if (p >= 100) { clearInterval(prog); return 100 } return p + 2 })
-    }, 36)
-    setTimeout(onDone, 2400)
+      setProgress(p => {
+        if (p >= 100) { clearInterval(prog); return 100 }
+        return p + 1.4
+      })
+    }, 28)
+
+    setTimeout(() => setPhase(1), 800)
+    setTimeout(onDone, 2200)
+
     return () => clearInterval(prog)
   }, [onDone])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center"
-      style={{ background: 'linear-gradient(135deg, #1A1AE6 0%, #080863 100%)' }}>
-      <div className="w-full max-w-md px-6">
-        <div className="flex justify-center mb-8"><Logo /></div>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center"
+      style={{ background: 'linear-gradient(135deg, #1A1AE6 0%, #080863 100%)' }}
+    >
+      {/* Logo animada */}
+      <div className="relative flex items-center justify-center mb-12">
+        {/* Anel externo girando */}
+        <svg
+          width="120" height="120" viewBox="0 0 120 120"
+          className="absolute"
+          style={{ animation: 'spin 2s linear infinite' }}
+        >
+          <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+          <circle
+            cx="60" cy="60" r="54"
+            fill="none"
+            stroke="#00E5FF"
+            strokeWidth="2"
+            strokeDasharray="80 260"
+            strokeLinecap="round"
+          />
+        </svg>
 
-        <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-6 font-mono text-sm mb-6 min-h-40">
-          {visible.map((line, i) => (
-            <div key={i} className="animate-boot-line text-white/80 mb-1.5 leading-relaxed">{line}</div>
-          ))}
-          <span className="inline-block w-1.5 h-4 bg-white/60 animate-pulse ml-0.5" />
-        </div>
+        {/* Anel interno girando ao contrário */}
+        <svg
+          width="90" height="90" viewBox="0 0 90 90"
+          className="absolute"
+          style={{ animation: 'spin 3s linear infinite reverse' }}
+        >
+          <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
+          <circle
+            cx="45" cy="45" r="38"
+            fill="none"
+            stroke="rgba(0,229,255,0.4)"
+            strokeWidth="1.5"
+            strokeDasharray="40 200"
+            strokeLinecap="round"
+          />
+        </svg>
 
-        <div className="flex justify-between text-xs text-white/40 mb-1.5">
-          <span>Carregando...</span>
-          <span className="text-white/70 font-medium">{progress}%</span>
-        </div>
-        <div className="h-1 bg-white/15 rounded-full overflow-hidden">
-          <div className="h-full bg-white rounded-full transition-all duration-75" style={{ width: `${progress}%` }} />
+        {/* Globe icon central */}
+        <svg width="52" height="52" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="18" stroke="white" strokeWidth="2" opacity={phase === 1 ? 1 : 0.6} style={{ transition: 'opacity 0.6s' }} />
+          <ellipse cx="20" cy="20" rx="18" ry="7" stroke="white" strokeWidth="1.5" opacity={phase === 1 ? 0.9 : 0.4} style={{ transition: 'opacity 0.6s' }} />
+          <ellipse cx="20" cy="20" rx="9" ry="18" stroke="white" strokeWidth="1.5" opacity={phase === 1 ? 0.9 : 0.4} style={{ transition: 'opacity 0.6s' }} />
+          <line x1="2" y1="20" x2="38" y2="20" stroke="white" strokeWidth="1.5" opacity={phase === 1 ? 0.9 : 0.4} style={{ transition: 'opacity 0.6s' }} />
+          <circle cx="20" cy="20" r="2.5" fill="#00E5FF" />
+        </svg>
+      </div>
+
+      {/* Progress bar */}
+      <div className="w-48">
+        <div className="h-0.5 bg-white/10 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-white rounded-full transition-all duration-75"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }
