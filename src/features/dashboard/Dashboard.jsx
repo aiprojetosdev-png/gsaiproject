@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
-import { TrendingUp, Users, DollarSign, Star, AlertCircle, ArrowUpRight } from 'lucide-react'
+import { TrendingUp, Users, DollarSign, Star, AlertCircle, ArrowUpRight, Zap, UserCheck, Bell } from 'lucide-react'
 import { dashboardData, aiAgents } from '../../data/agents'
 import BrazilMap from './BrazilMap'
 
@@ -119,6 +119,32 @@ export default function Dashboard() {
               <Line dataKey="revenue" stroke="#1A1AE6" strokeWidth={2.5} dot={{ fill: '#1A1AE6', r: 4, strokeWidth: 0 }} activeDot={{ r: 6, fill: '#1A1AE6', strokeWidth: 2, stroke: '#EEF0FF' }} />
             </LineChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Activity feed */}
+      <div className="card p-5">
+        <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <Bell size={15} className="text-slate-400" />
+          Atividade Recente
+        </h2>
+        <div className="space-y-3">
+          {dashboardData.recentActivity.map(item => {
+            const icons = {
+              lead:   <div className="w-7 h-7 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center"><Users size={12} className="text-gs-blue" /></div>,
+              client: <div className="w-7 h-7 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-center"><UserCheck size={12} className="text-emerald-600" /></div>,
+              deal:   <div className="w-7 h-7 bg-purple-50 border border-purple-100 rounded-lg flex items-center justify-center"><TrendingUp size={12} className="text-purple-600" /></div>,
+              ai:     <div className="w-7 h-7 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center"><Zap size={12} className="text-gs-blue" /></div>,
+              alert:  <div className="w-7 h-7 bg-amber-50 border border-amber-100 rounded-lg flex items-center justify-center"><AlertCircle size={12} className="text-amber-600" /></div>,
+            }
+            return (
+              <div key={item.id} className="flex items-center gap-3 py-1.5">
+                {icons[item.icon]}
+                <p className="text-sm text-slate-700 flex-1">{item.text}</p>
+                <span className="text-xs text-slate-400 shrink-0">há {item.time}</span>
+              </div>
+            )
+          })}
         </div>
       </div>
 

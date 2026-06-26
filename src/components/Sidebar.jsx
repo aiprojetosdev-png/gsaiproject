@@ -1,14 +1,16 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Search, Kanban, Users, BarChart3, Settings, LogOut, Activity } from 'lucide-react'
+import { LayoutDashboard, Search, Kanban, Users, BarChart3, Settings, LogOut, Activity, DollarSign, UserCheck } from 'lucide-react'
 import Logo from './Logo'
 import { aiAgents } from '../data/agents'
 
 const nav = [
-  { to: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/prospeccao',   icon: Search,           label: 'Prospecção' },
-  { to: '/pipeline',     icon: Kanban,           label: 'Pipeline' },
-  { to: '/clientes',     icon: Users,            label: 'Clientes' },
-  { to: '/relatorios',   icon: BarChart3,        label: 'Relatórios' },
+  { to: '/dashboard',   icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/prospeccao',  icon: Search,           label: 'Prospecção' },
+  { to: '/pipeline',    icon: Kanban,           label: 'Pipeline' },
+  { to: '/clientes',    icon: Users,            label: 'Clientes' },
+  { to: '/financeiro',  icon: DollarSign,       label: 'Financeiro' },
+  { to: '/equipe',      icon: UserCheck,        label: 'Equipe' },
+  { to: '/relatorios',  icon: BarChart3,        label: 'Relatórios' },
 ]
 
 export default function Sidebar({ onLogout }) {
@@ -27,20 +29,13 @@ export default function Sidebar({ onLogout }) {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative
                 ${isActive
-                  ? 'bg-white/10 text-white'
+                  ? 'bg-white/10 text-white before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-gs-cyan before:rounded-r-full'
                   : 'text-white/50 hover:text-white/80 hover:bg-white/5'
                 }`
               }
             >
-              {({ isActive }) => (
-                <>
-                  {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 bg-gs-cyan rounded-r-full" />
-                  )}
-                  <Icon size={16} className={({ isActive }) => isActive ? 'text-gs-cyan' : ''} />
-                  {label}
-                </>
-              )}
+              <Icon size={16} />
+              {label}
             </NavLink>
           ))}
         </div>
@@ -66,15 +61,10 @@ export default function Sidebar({ onLogout }) {
 
       <div className="border-t border-white/8 p-3 space-y-0.5">
         <button className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-white/40 hover:text-white/70 hover:bg-white/5 rounded-xl transition-all">
-          <Settings size={15} />
-          Configurações
+          <Settings size={15} />Configurações
         </button>
-        <button
-          onClick={onLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-white/40 hover:text-white/70 hover:bg-white/5 rounded-xl transition-all"
-        >
-          <LogOut size={15} />
-          Sair
+        <button onClick={onLogout} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-white/40 hover:text-white/70 hover:bg-white/5 rounded-xl transition-all">
+          <LogOut size={15} />Sair
         </button>
       </div>
     </aside>

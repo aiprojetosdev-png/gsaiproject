@@ -1,0 +1,58 @@
+export const financeiroData = {
+  mrr: 357500,
+  arr: 4290000,
+  churnRate: 1.2,
+  ltv: 2850000,
+  cac: 48000,
+  newMRR: 42000,
+  expansionMRR: 18500,
+  churnMRR: 8200,
+
+  mrrHistory: [
+    { mes: 'Jan/25', mrr: 285000, new: 28000, expansion: 12000, churn: 5000 },
+    { mes: 'Fev/25', mrr: 298000, new: 22000, expansion: 8000,  churn: 7000 },
+    { mes: 'Mar/25', mrr: 310000, new: 31000, expansion: 14000, churn: 6500 },
+    { mes: 'Abr/25', mrr: 318000, new: 18000, expansion: 9000,  churn: 9000 },
+    { mes: 'Mai/25', mrr: 325000, new: 25000, expansion: 11000, churn: 4000 },
+    { mes: 'Jun/25', mrr: 335000, new: 35000, expansion: 15000, churn: 3500 },
+    { mes: 'Jul/25', mrr: 340000, new: 20000, expansion: 10000, churn: 8000 },
+    { mes: 'Ago/25', mrr: 342000, new: 15000, expansion: 7500,  churn: 9000 },
+    { mes: 'Set/25', mrr: 345000, new: 28000, expansion: 12000, churn: 5500 },
+    { mes: 'Out/25', mrr: 349000, new: 32000, expansion: 14000, churn: 4500 },
+    { mes: 'Nov/25', mrr: 352000, new: 19000, expansion: 9000,  churn: 6000 },
+    { mes: 'Dez/25', mrr: 350000, new: 11000, expansion: 5000,  churn: 8000 },
+    { mes: 'Jan/26', mrr: 351000, new: 22000, expansion: 13000, churn: 7000 },
+    { mes: 'Fev/26', mrr: 353000, new: 18000, expansion: 9500,  churn: 4500 },
+    { mes: 'Mar/26', mrr: 354500, new: 24000, expansion: 11500, churn: 5000 },
+    { mes: 'Abr/26', mrr: 355000, new: 16000, expansion: 8000,  churn: 6500 },
+    { mes: 'Mai/26', mrr: 356000, new: 28000, expansion: 13000, churn: 4200 },
+    { mes: 'Jun/26', mrr: 357500, new: 42000, expansion: 18500, churn: 8200 },
+  ],
+
+  clienteMRR: [
+    { name: 'ArcelorMittal', mrr: 105000, pct: 29.4, trend: +2100 },
+    { name: 'Nestlé Brasil',  mrr: 70000,  pct: 19.6, trend: +1400 },
+    { name: 'Grupo Sá Cavalcante', mrr: 60000, pct: 16.8, trend: +900 },
+    { name: 'Pharmanexo',    mrr: 55000,  pct: 15.4, trend: +800 },
+    { name: 'Petz',          mrr: 35000,  pct: 9.8,  trend: -200 },
+    { name: 'Aramis',        mrr: 32500,  pct: 9.1,  trend: +500 },
+  ],
+
+  projecao: [
+    { mes: 'Jul/26', mrr: 368000, pessimista: 354000, otimista: 382000 },
+    { mes: 'Ago/26', mrr: 379000, pessimista: 360000, otimista: 398000 },
+    { mes: 'Set/26', mrr: 392000, pessimista: 371000, otimista: 415000 },
+    { mes: 'Out/26', mrr: 406000, pessimista: 380000, otimista: 432000 },
+    { mes: 'Nov/26', mrr: 420000, pessimista: 392000, otimista: 450000 },
+    { mes: 'Dez/26', mrr: 435000, pessimista: 405000, otimista: 470000 },
+  ],
+
+  invoices: [
+    { id: 'INV-2026-061', client: 'Nestlé Brasil',        value: 70000,  status: 'pago',     date: '2026-06-05', due: '2026-06-05' },
+    { id: 'INV-2026-062', client: 'ArcelorMittal',        value: 105000, status: 'pago',     date: '2026-06-05', due: '2026-06-05' },
+    { id: 'INV-2026-063', client: 'Pharmanexo',           value: 55000,  status: 'pago',     date: '2026-06-08', due: '2026-06-08' },
+    { id: 'INV-2026-064', client: 'Grupo Sá Cavalcante',  value: 60000,  status: 'pago',     date: '2026-06-10', due: '2026-06-10' },
+    { id: 'INV-2026-065', client: 'Petz',                 value: 35000,  status: 'pendente', date: '2026-06-20', due: '2026-07-05' },
+    { id: 'INV-2026-066', client: 'Aramis',               value: 32500,  status: 'pendente', date: '2026-06-25', due: '2026-07-10' },
+  ],
+}
